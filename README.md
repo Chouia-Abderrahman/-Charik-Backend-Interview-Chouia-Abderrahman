@@ -6,7 +6,7 @@ This repository contains the code for the backend technical test for Charik. It 
 
 ## Prerequisites
 
-- **Python 3.8+**: Make sure Python 3.8 or later is installed on your machine.
+- **Python 3.10+**: Make sure Python 3.10 or later is installed on your machine.
 - **Docker**: Ensure Docker is installed for containerization.
 - **HubSpot API Key**: You need a HubSpot API key to interact with HubSpot's API.
 
