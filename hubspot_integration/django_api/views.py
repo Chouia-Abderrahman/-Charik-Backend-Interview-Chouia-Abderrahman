@@ -1,13 +1,9 @@
 import json
-import urllib.request
 import requests
-from django.views.decorators.csrf import csrf_exempt
-from hubspot.crm.associations import PublicAssociation, BatchInputPublicObjectId
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-from hubspot.crm.contacts import SimplePublicObjectInputForCreate, SimplePublicObjectInput, AssociationSpec, \
-    SimplePublicObjectId
+from hubspot.crm.contacts import SimplePublicObjectInputForCreate, SimplePublicObjectId
 from .serializers import hubspot_contact_serializer, hubspot_deal_serializer, hubspot_association_serializer
 from hubspot import HubSpot
 from dotenv import load_dotenv
@@ -48,7 +44,6 @@ class CreateContactAPIView(APIView):
 
 class CreateDealAPIView(APIView):
     def post(self, request):
-        # contact_id = request.data.get('contact_id')
         deal_name = request.data.get('deal_name')
 
         deal_properties = {
@@ -166,10 +161,6 @@ class RetrieveContactsAndDealsAPIView(APIView):
                 # Fetch full deal details
                 contact_dict['deals'] = []
                 for association in associations['results']:
-                    # if len(association)==0:
-                    #     print('empty')
-                    #     continue
-                    print(association)
                     for single_deal in association['to']:
                         deal_id = single_deal['id']
                         deal = api_client.crm.deals.basic_api.get_by_id(
