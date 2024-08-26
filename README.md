@@ -38,7 +38,7 @@ Build and run the Docker container:
 
 ```bash
 docker build -t charik-backend .
-docker run -p 8000:8000 --env-file .env charik-backend
+docker run -p 8000:8000 charik-backend
 ```
 
 This will build the Docker image and run the application, mapping port 8000 from the container to port 8000 on your host.
