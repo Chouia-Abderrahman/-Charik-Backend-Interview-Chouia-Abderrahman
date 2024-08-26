@@ -55,8 +55,8 @@ Endpoints
         json
 
     {
-      "lastname": "Chouia test 2",
-      "firstname": "Abderrahman test 2"
+      "lastname": "Chouia",
+      "firstname": "Abderrahman"
     }
 
     Response: 201 Created, with the contact ID in the response.
@@ -71,7 +71,7 @@ Create Deal
     json
 
     {
-      "deal_name": "Deal - Chouia Abderrahman test 3"
+      "deal_name": "Deal - Chouia Abderrahman"
     }
 
     Response: 201 Created, with the deal ID in the response.
