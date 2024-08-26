@@ -7,6 +7,6 @@ from .views import (CreateContactAPIView,
 urlpatterns = [
     path('contacts/create/', CreateContactAPIView.as_view()),
     path('deals/create/', CreateDealAPIView.as_view()),
-    path('deals/<int:deal_id>/associate/', AssociateContactWithDealAPIView.as_view()),
+    path('deals/associate/', AssociateContactWithDealAPIView.as_view()),
     path('contacts/', RetrieveContactsAndDealsAPIView.as_view()),
 ]

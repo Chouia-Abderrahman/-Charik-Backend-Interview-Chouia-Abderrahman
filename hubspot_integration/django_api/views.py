@@ -1,6 +1,6 @@
 import json
 import urllib.request
-
+import requests
 from django.views.decorators.csrf import csrf_exempt
 from hubspot.crm.associations import PublicAssociation, BatchInputPublicObjectId
 from rest_framework.views import APIView
@@ -73,31 +73,62 @@ class CreateDealAPIView(APIView):
             return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 class AssociateContactWithDealAPIView(APIView):
-    def put(self, request, deal_id):
+    def post(self, request):
         contact_id = request.data.get('contact_id')
+        deal_id = request.data.get('deal_id')
+        if not contact_id or not deal_id:
+            return Response({
+                "error": "Both contact_id and deal_id are required"
+            }, status=status.HTTP_400_BAD_REQUEST)
+        # HubSpot API endpoint
+        url = "https://api.hubapi.com/crm/v3/associations/contacts/deals/batch/create"
 
+        # Your HubSpot API key
+
+        # Headers
+        headers = {
+            "Authorization": f"Bearer {hubspot_token}",
+            "Content-Type": "application/json"
+        }
+
+        # Request body
+        # You might want to get these IDs from the request data
+        data = {
+            "inputs": [
+                {
+                    "from": {
+                        "id": contact_id
+                    },
+                    "to": {
+                        "id": deal_id
+                    },
+                    "type": "contact_to_deal"
+                }
+            ]
+        }
 
         try:
+            # Send POST request to HubSpot API
+            response = requests.post(url, json=data, headers=headers)
 
-            association = PublicAssociation(
-                _from=contact_id,
-                to=deal_id,
-                type='contact_to_deal'
-            )
+            # Check if the request was successful
+            if response.status_code in [200, 201]:
+                serialized_response = json.loads(hubspot_association_serializer(response.json()))
 
-            res = api_client.crm.associations.batch_api.create(
-                from_object_type="contact",
-                to_object_type="deal",
-                batch_input_public_association=association
-            )
-            print(res)
+                return Response(serialized_response, status=status.HTTP_200_OK)
+            else:
+                return Response({
+                    "error": "HubSpot API request failed",
+                    "status_code": response.status_code,
+                    "response": response.text
+                }, status=status.HTTP_400_BAD_REQUEST)
 
+        except requests.RequestException as e:
+            return Response({
+                "error": "Request to HubSpot API failed",
+                "details": str(e)
+            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-
-            return Response({"message": "Contact associated with deal successfully"}, status=status.HTTP_200_OK)
-
-        except Exception as e:
-            return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
 class RetrieveContactsAndDealsAPIView(APIView):
@@ -134,18 +165,18 @@ class RetrieveContactsAndDealsAPIView(APIView):
 
                 # Fetch full deal details
                 contact_dict['deals'] = []
-                # print(associations['results'])
                 for association in associations['results']:
-                    if len(association)==0:
-                        print('empty')
-                        continue
+                    # if len(association)==0:
+                    #     print('empty')
+                    #     continue
                     print(association)
-                    deal_id = association['to'][0]['id']
-                    deal = api_client.crm.deals.basic_api.get_by_id(
-                        deal_id=deal_id,
-                        properties=["dealname", "amount", "closedate", "dealstage"]
-                    )
-                    contact_dict['deals'].append(json.loads(hubspot_deal_serializer(deal.to_dict())))
+                    for single_deal in association['to']:
+                        deal_id = single_deal['id']
+                        deal = api_client.crm.deals.basic_api.get_by_id(
+                            deal_id=deal_id,
+                            properties=["dealname", "amount", "closedate", "dealstage"]
+                        )
+                        contact_dict['deals'].append(json.loads(hubspot_deal_serializer(deal.to_dict())))
 
                 contacts_with_deals.append(contact_dict)
 
