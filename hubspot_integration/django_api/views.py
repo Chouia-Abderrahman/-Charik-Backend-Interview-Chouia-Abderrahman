@@ -29,12 +29,13 @@ class CreateContactAPIView(APIView):
             simple_public_object_input_for_create = SimplePublicObjectInputForCreate(
                 properties=contact_properties
             )
+            # Create a contact using first and last name in the request
             api_response = api_client.crm.contacts.basic_api.create(
                 simple_public_object_input_for_create=simple_public_object_input_for_create
             )
 
             response_dict = api_response.to_dict()
-
+            # Serialize the response
             serialized_data = hubspot_contact_serializer(response_dict)
 
             serialized_dict = json.loads(serialized_data)
@@ -55,6 +56,7 @@ class CreateDealAPIView(APIView):
             simple_public_object_input_for_create = SimplePublicObjectInputForCreate(
                 properties=deal_properties
             )
+            # Create a deal with the deal name provided in the request
             api_response = api_client.crm.deals.basic_api.create(
                 simple_public_object_input_for_create=simple_public_object_input_for_create
             )
@@ -78,7 +80,6 @@ class AssociateContactWithDealAPIView(APIView):
         # HubSpot API endpoint
         url = "https://api.hubapi.com/crm/v3/associations/contacts/deals/batch/create"
 
-        # Your HubSpot API key
 
         # Headers
         headers = {
@@ -87,7 +88,6 @@ class AssociateContactWithDealAPIView(APIView):
         }
 
         # Request body
-        # You might want to get these IDs from the request data
         data = {
             "inputs": [
                 {
@@ -161,6 +161,7 @@ class RetrieveContactsAndDealsAPIView(APIView):
                 # Fetch full deal details
                 contact_dict['deals'] = []
                 for association in associations['results']:
+                    # Iterate over all deals
                     for single_deal in association['to']:
                         deal_id = single_deal['id']
                         deal = api_client.crm.deals.basic_api.get_by_id(
