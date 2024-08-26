@@ -34,7 +34,7 @@ jobs:
       # Optionally, test the running container (e.g., checking a health endpoint)
       - name: Test Docker container
         run: |
-          curl --fail http://localhost:8000/ || exit 1
+          curl --fail http://localhost:8000/admin/ || exit 1
         continue-on-error: false
 
       # Stop and remove the Docker container
