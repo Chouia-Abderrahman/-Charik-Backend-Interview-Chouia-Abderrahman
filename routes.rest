@@ -1,0 +1,52 @@
+POST http://localhost:8000/contacts/create/
+Content-Type: application/json
+
+{
+  "lastname": "Chouia test 2",
+  "firstname": "Abderrahman test 2"
+}
+######################
+contact id 32109216466
+deal id 16469789119
+#######################
+GET http://localhost:8000/contacts/
+
+##########################"
+POST http://localhost:8000/deals/create/
+Content-Type: application/json
+
+{
+  "deal_name": "Deal - Chouia Abderrahman test 3"
+}
+
+################################
+
+POST http://localhost:8000/deals/associate/
+Content-Type: application/json
+
+{
+  "contact_id": "32109216466",
+  "deal_id": "16473007324"
+}
+
+################################
+GET http://localhost:8000/contacts/
+
+#################### Test
+POST https://api.hubapi.com/crm/v3/associations/contacts/deals/batch/create
+Authorization: Bearer token
+Content-Type: application/json
+
+{
+  "inputs": [
+    {
+      "from": {
+        "id": "32092829653"
+      },
+      "to": {
+        "id": "16468561888"
+      },
+      "type": "contact_to_deal"
+    }
+  ]
+}
