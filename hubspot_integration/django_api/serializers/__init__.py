@@ -1,0 +1,3 @@
+from .association_serializer import hubspot_association_serializer
+from .contract_serializer import hubspot_contact_serializer
+from .deal_serializer import hubspot_deal_serializer
