@@ -1,4 +1,4 @@
-# Charik Backend Developer Technical Test
+# Simple Hubspot Integration API
 
 ## Overview
 
