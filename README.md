@@ -2,7 +2,7 @@
 
 ## Overview
 
-This repository contains the code for the backend technical test for Charik. It includes a Django REST Framework application that integrates with HubSpot's API to manage contacts and deals. The application is containerized using Docker.
+This repository includes a Django REST Framework application that integrates with HubSpot's API to manage contacts and deals. The application is containerized using Docker.
 
 ## Prerequisites
 
